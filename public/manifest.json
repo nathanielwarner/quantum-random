@@ -1,0 +1,25 @@
+{
+  "short_name": "Quantum RNG",
+  "name": "Quantum Random Number Generator",
+  "icons": [
+    {
+      "src": "kaleidoscopic_ifs_64.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "kaleidoscopic_ifs_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "kaleidoscopic_ifs_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
