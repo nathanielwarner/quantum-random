@@ -4,7 +4,7 @@ class History extends React.Component {
   render() {
     const historyItems = this.props.historyItems;
     const historyItemDisplays = historyItems.map((historyItem) => 
-      <li key={historyItem}>{historyItem}</li>
+      <li key={historyItem.id}>{historyItem.type}: {historyItem.result}</li>
     );
     return (
       <div className="History">

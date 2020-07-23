@@ -1,4 +1,5 @@
 import React from 'react';
+import LoginForm from './LoginForm';
 
 
 class Login extends React.Component {
@@ -20,10 +21,8 @@ class Login extends React.Component {
     return (
       <div className="Login">
         {isLoggedIn ? "Welcome Back!" : "Hi, Guest."}&nbsp;
-        <button onClick={isLoggedIn ? this.handleLogoutClick : this.handleLoginClick}>
-          {isLoggedIn ? "Log Out" : "Log In"}
-        </button>&nbsp;
-        {isLoggedIn ? null : "Making an account helps us out!"}
+        {isLoggedIn ? <button onClick={this.handleLogoutClick}>Log Out</button> : null}
+        {isLoggedIn ? null : <LoginForm />}
       </div>
     );
   }
