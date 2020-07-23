@@ -1,6 +1,8 @@
 import React from 'react';
+import Login from './Login';
 import Clock from './Clock';
-import HistoryItem from './HistoryItem';
+import Toggle from './Toggle';
+import History from './History';
 import './App.css';
 
 class App extends React.Component {
@@ -8,21 +10,18 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src="kaleidoscopic_ifs_512.png" className="App-logo" alt="logo" />
+          <img src="quaternion_512.png" className="App-logo" alt="logo" />
           <h1>
             Quantum RNG
           </h1>
         </header>
-        <body className="App-body">
+        <div className="App-body">
           <p>Your source for <b>truly random</b> numbers, coin tosses, and dice rolls.</p>
+          <Login />
           <Clock />
-          <h2>History</h2>
-          <ul>
-            <li><HistoryItem type="Coin Flip" result="Heads" /></li>
-            <li><HistoryItem type="Coin Flip" result="Tails" /></li>
-            <li><HistoryItem type="Coin Flip" result="Tails" /></li>
-          </ul>
-        </body>
+          <Toggle />
+          <History historyItems={["coin flip heads", "coin flip tails"]} />
+        </div>
       </div>
     );
   }
