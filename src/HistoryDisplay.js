@@ -1,10 +1,10 @@
 import React from 'react';
 
-class History extends React.Component {
+class HistoryDisplay extends React.Component {
   render() {
     const historyItems = this.props.historyItems;
-    const historyItemDisplays = historyItems.map((historyItem) => 
-      <li key={historyItem.id}>{historyItem.type}: {historyItem.result}</li>
+    const historyItemDisplays = historyItems.map((historyItem, index) => 
+      <li key={index}>{historyItem.type}: {historyItem.result}</li>
     );
     return (
       <div className="History">
@@ -15,4 +15,4 @@ class History extends React.Component {
   }
 }
 
-export default History;
+export default HistoryDisplay;

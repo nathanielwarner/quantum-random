@@ -5,11 +5,11 @@ import LoginForm from './LoginForm';
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {isLoggedIn: false};
+    this.state = {isLoggedIn: false, userName: null};
   }
 
-  handleLoginClick = () => {
-    this.setState({isLoggedIn: true});
+  handleLoginClick = (username) => {
+    this.setState({isLoggedIn: true, userName: username});
   }
 
   handleLogoutClick = () => {
@@ -20,9 +20,9 @@ class Login extends React.Component {
     const isLoggedIn = this.state.isLoggedIn;
     return (
       <div className="Login">
-        {isLoggedIn ? "Welcome Back!" : "Hi, Guest."}&nbsp;
+        {isLoggedIn ? "Welcome Back " + this.state.userName + "!" : "Hi, Guest."}&nbsp;
         {isLoggedIn ? <button onClick={this.handleLogoutClick}>Log Out</button> : null}
-        {isLoggedIn ? null : <LoginForm />}
+        {isLoggedIn ? null : <LoginForm onLoginClick={this.handleLoginClick} />}
       </div>
     );
   }

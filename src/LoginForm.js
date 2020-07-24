@@ -13,7 +13,7 @@ class LoginForm extends React.Component {
   }
 
   handleSubmit = (event) => {
-    alert('Name submitted: ' + this.state.userName);
+    this.props.onLoginClick(this.state.userName);
     event.preventDefault();
   }
 
