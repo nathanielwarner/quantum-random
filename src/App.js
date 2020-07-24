@@ -12,6 +12,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       randType: "coinFlip", 
+      buttonPushed: false,
       history: [
         {"type": "coinFlip", "result": "Heads"},
         {"type": "coinFlip", "result": "Heads"},
@@ -26,13 +27,63 @@ class App extends React.Component {
     this.setState({randType: e.target.value});
   }
 
-  handleGoPress = (e) => {
-    if (false) {
+  getQuantumRandomSelection(numClasses, callback) {
+    const length = numClasses - 1;
+    fetch("https://qrng.anu.edu.au/API/jsonI.php?length=" + length + "&type=uint8")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          if (result.success === true && result.type === "uint8" && result.length === length) {
+            const mapped = result.data.map(x => x < 128 ? 0 : 1);
+            const sum = mapped.reduce((a, b) => a + b);
+            callback(sum);
+          }
+        },
+        (error) => {
+          console.log("oops");
+          console.log(error);
+        }
+      );
+  }
 
-    } else {
-      let history = this.state.history;
-      history.push({"type": "error", "result": "error"});
-      this.setState({history: history});
+  pushNewResult = (resultType, resultText) => {
+    let history = this.state.history;
+    const newItem = {"type": resultType, "result": resultText};
+    history.push(newItem);
+    this.setState({history: history, buttonPushed: true});
+  }
+
+  pushAPIErrorResult = () => {
+    this.pushNewResult("error", "API Call Failed");
+  }
+
+  pushUnexpectedErrorResult = () => {
+    this.pushNewResult("error", "Unexpected Error");
+  }
+
+  coinFlipCallback = (result) => {
+    switch (result) {
+      case 0:
+        this.pushNewResult("coinFlip", "Heads");
+        break;
+      case 1:
+        this.pushNewResult("coinFlip", "Tails");
+        break;
+      default:
+        this.pushAPIErrorResult();
+        break;
+    }
+  }
+
+  handleGoPress = (e) => {
+    switch (this.state.randType) {
+      case "coinFlip":
+        this.getQuantumRandomSelection(2, this.coinFlipCallback);
+        break;
+      default:
+        this.pushUnexpectedErrorResult();
+        break;
     }
   }
   
@@ -51,7 +102,7 @@ class App extends React.Component {
         <div className="App-body">
           <p>Your source for <b>truly random</b> numbers, coin tosses, and dice rolls.</p>
           <RandTypeSelector selected={this.state.randType} onChange={this.handleRandTypeChange} />
-          <GoButton lastResult={lastResult} handleClick={this.handleGoPress} />
+          <GoButton pushed={this.state.buttonPushed} lastResult={lastResult} handleClick={this.handleGoPress} />
           <Login />
           <Clock />
           <OutlinedBorder color="yellow" pre={
