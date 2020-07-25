@@ -19,7 +19,7 @@ class App extends React.Component {
         {"type": "coinFlip", "result": "Heads"},
         {"type": "coinFlip", "result": "Heads"},
         {"type": "coinFlip", "result": "Tails"},
-        {"type": "diceRollD6", "result": "4"},
+        {"type": "diceRollD8", "result": "4"},
         {"type": "coinFlip", "result": "Heads"}
       ]
     };
@@ -71,10 +71,21 @@ class App extends React.Component {
     }
   }
 
+  diceRollD6Callback = (result) => {
+    if (result < 0) {
+      this.pushAPIErrorResult();
+    } else {
+      this.pushNewResult("diceRollD8", (result + 1).toString());
+    }
+  }
+
   handleGoPress = (e) => {
     switch (this.state.randType) {
       case "coinFlip":
         this.getQuantumRandomSelection(2, this.coinFlipCallback);
+        break;
+      case "diceRollD8":
+        this.getQuantumRandomSelection(8, this.diceRollD6Callback);
         break;
       default:
         this.pushUnexpectedErrorResult();
