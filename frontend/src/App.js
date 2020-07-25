@@ -30,26 +30,16 @@ class App extends React.Component {
   }
 
   getQuantumRandomSelection(numClasses, callback) {
-    const length = numClasses - 1;
-    axios.get(
-      "https://qrng.anu.edu.au/API/jsonI.php?length=" + length + "&type=uint8"
-    )
-      .then(res => res.data)
+    axios.get("api/qrng?numClasses=" + numClasses)
       .then(
-        (result) => {
-          console.log(result);
-          if (result.success === true && result.type === "uint8" && result.length === length) {
-            const mapped = result.data.map(x => x < 128 ? 0 : 1);
-            const sum = mapped.reduce((a, b) => a + b);
-            callback(sum);
-          }
+        res => {
+          const result = res.data.result;
+          callback(result);
         },
-        (error) => {
-          console.log("Failed to make request to quantum API");
+        error => {
           console.log(error);
-          callback(-1);
-        }
-      );
+          callback(-2);
+        });
   }
 
   pushNewResult = (resultType, resultText) => {
