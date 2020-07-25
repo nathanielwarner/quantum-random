@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+
 import Login from './Login';
 import Clock from './Clock';
 import GoButton from './GoButton';
@@ -29,8 +31,10 @@ class App extends React.Component {
 
   getQuantumRandomSelection(numClasses, callback) {
     const length = numClasses - 1;
-    fetch("https://qrng.anu.edu.au/API/jsonI.php?length=" + length + "&type=uint8")
-      .then(res => res.json())
+    axios.get(
+      "https://qrng.anu.edu.au/API/jsonI.php?length=" + length + "&type=uint8"
+    )
+      .then(res => res.data)
       .then(
         (result) => {
           console.log(result);
@@ -41,8 +45,9 @@ class App extends React.Component {
           }
         },
         (error) => {
-          console.log("oops");
+          console.log("Failed to make request to quantum API");
           console.log(error);
+          callback(-1);
         }
       );
   }
