@@ -1,5 +1,5 @@
 {
-  "name": "quantum-random",
+  "name": "quantum-random-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
