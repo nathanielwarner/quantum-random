@@ -1,0 +1,9 @@
+.UniverseActionsForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.UniverseActionsForm * {
+  margin: 0.3em;
+  font-family: monospace;
+}

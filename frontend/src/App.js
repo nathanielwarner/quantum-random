@@ -90,7 +90,7 @@ class App extends React.Component {
           </h1>
         </header>
         <div className="App-body">
-          <p>Your source for <b>truly random</b> coin flips.</p>
+          <p>Your source for <b>truly random</b> coin flips, obtained from quantum fluctuations.</p>
           <UniverseActionsForm headsAction={this.state.headsAction} tailsAction={this.state.tailsAction} 
                                handleHeadsActionChange={this.handleHeadsActionChange} 
                                handleTailsActionChange={this.handleTailsActionChange} />

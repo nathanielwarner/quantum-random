@@ -1,21 +1,23 @@
 import React from 'react';
 
+import './GoButton.css';
+
 class GoButton extends React.Component {
   render() {
     let text;
-    if (this.props.gotResult) {
+    if (this.props.awaitingResult) {
+      text = "Please wait...";
+    } else if (this.props.gotResult) {
       if (this.props.lastResult.isHeads) {
         text = "Heads";
       } else {
         text = "Tails";
       }
-    } else if (this.props.awaitingResult) {
-      text = "Please wait...";
     } else {
-      text = "Push me!";
+      text = "Flip";
     }
     return (
-      <button onClick={this.props.handleClick}>
+      <button className="GoButton" onClick={this.props.handleClick}>
         {text}
       </button>
     );
