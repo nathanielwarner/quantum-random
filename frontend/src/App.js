@@ -14,7 +14,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonPushed: false,
+      awaitingResult: false,
+      gotResult: false,
       headsAction: "Ask that special someone out",
       tailsAction: "Watch Netflix",
       history: [
@@ -49,7 +50,11 @@ class App extends React.Component {
   pushNewResult = (result) => {
     let history = this.state.history;
     history.push(result);
-    this.setState({history: history, buttonPushed: true});
+    this.setState({history: history, gotResult: true});
+  }
+
+  showError = (errCode) => {
+    alert("Error");
   }
 
   coinFlipCallback = (result) => {
@@ -61,12 +66,14 @@ class App extends React.Component {
         this.pushNewResult(new HistoryItem(false, this.state.headsAction, this.state.tailsAction));
         break;
       default:
-        alert("API Error");
+        this.showError(result);
         break;
     }
+    this.setState({awaitingResult: false});
   }
 
   handleGoPress = (e) => {
+    this.setState({awaitingResult: true});
     this.getQuantumRandomSelection(2, this.coinFlipCallback);
   }
   
@@ -87,7 +94,7 @@ class App extends React.Component {
           <UniverseActionsForm headsAction={this.state.headsAction} tailsAction={this.state.tailsAction} 
                                handleHeadsActionChange={this.handleHeadsActionChange} 
                                handleTailsActionChange={this.handleTailsActionChange} />
-          <GoButton pushed={this.state.buttonPushed} lastResult={lastResult} handleClick={this.handleGoPress} />
+          <GoButton awaitingResult={this.state.awaitingResult} gotResult={this.state.gotResult} lastResult={lastResult} handleClick={this.handleGoPress} />
           <OutlinedBorder color="yellow" pre={
             <p>I go before!</p>
           }>
