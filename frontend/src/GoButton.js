@@ -4,7 +4,11 @@ class GoButton extends React.Component {
   render() {
     let text;
     if (this.props.pushed) {
-      text = this.props.lastResult.result;
+      if (this.props.lastResult.isHeads) {
+        text = "Heads";
+      } else {
+        text = "Tails";
+      }
     } else {
       text = "Push me!";
     }

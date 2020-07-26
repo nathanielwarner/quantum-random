@@ -1,37 +1,36 @@
 import React from 'react';
 import axios from 'axios';
 
-import Login from './Login';
-import Clock from './Clock';
+import UniverseActionsForm from './UniverseActionsForm';
 import GoButton from './GoButton';
+import HistoryItem from './HistoryItem';
 import HistoryDisplay from './HistoryDisplay';
 import './App.css';
-import RandTypeSelector from './RandTypeSelector';
 import OutlinedBorder from './OutlinedBorder';
+import Login from './Login';
+import Clock from './Clock';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      randType: "coinFlip", 
-      diceType: 8,
       buttonPushed: false,
+      headsAction: "Ask that special someone out",
+      tailsAction: "Watch Netflix",
       history: [
-        {"type": "coinFlip", "result": "Heads"},
-        {"type": "coinFlip", "result": "Heads"},
-        {"type": "coinFlip", "result": "Tails"},
-        {"type": "diceRoll", "result": "4"},
-        {"type": "coinFlip", "result": "Heads"}
+        new HistoryItem(true),
+        new HistoryItem(true, "Do something risky", "Do something safe"),
+        new HistoryItem(false)
       ]
     };
   }
 
-  handleRandTypeChange = (e) => {
-    this.setState({randType: e.target.value});
+  handleHeadsActionChange = (e) => {
+    this.setState({headsAction: e.target.value});
   }
 
-  handleDiceTypeChange = (e) => {
-    this.setState({diceType: e.target.value});
+  handleTailsActionChange = (e) => {
+    this.setState({tailsAction: e.target.value});
   }
 
   getQuantumRandomSelection(numClasses, callback) {
@@ -43,59 +42,32 @@ class App extends React.Component {
         },
         error => {
           console.log(error);
-          callback(-2);
+          callback(-1);
         });
   }
 
-  pushNewResult = (resultType, resultText) => {
+  pushNewResult = (result) => {
     let history = this.state.history;
-    const newItem = {"type": resultType, "result": resultText};
-    history.push(newItem);
+    history.push(result);
     this.setState({history: history, buttonPushed: true});
-  }
-
-  pushAPIErrorResult = () => {
-    this.pushNewResult("error", "API Call Failed");
-  }
-
-  pushUnexpectedErrorResult = () => {
-    this.pushNewResult("error", "Unexpected Error");
   }
 
   coinFlipCallback = (result) => {
     switch (result) {
       case 0:
-        this.pushNewResult("coinFlip", "Heads");
+        this.pushNewResult(new HistoryItem(true, this.state.headsAction, this.state.tailsAction));
         break;
       case 1:
-        this.pushNewResult("coinFlip", "Tails");
+        this.pushNewResult(new HistoryItem(false, this.state.headsAction, this.state.tailsAction));
         break;
       default:
-        this.pushAPIErrorResult();
+        alert("API Error");
         break;
-    }
-  }
-
-  diceRollCallback = (result) => {
-    if (result < 0) {
-      this.pushAPIErrorResult();
-    } else {
-      this.pushNewResult("diceRoll", (result + 1).toString());
     }
   }
 
   handleGoPress = (e) => {
-    switch (this.state.randType) {
-      case "coinFlip":
-        this.getQuantumRandomSelection(2, this.coinFlipCallback);
-        break;
-      case "diceRoll":
-        this.getQuantumRandomSelection(this.state.diceType, this.diceRollCallback);
-        break;
-      default:
-        this.pushUnexpectedErrorResult();
-        break;
-    }
+    this.getQuantumRandomSelection(2, this.coinFlipCallback);
   }
   
   render() {
@@ -107,20 +79,22 @@ class App extends React.Component {
         <header className="App-header">
           <img src="quaternion_512.png" className="App-logo" alt="logo" />
           <h1>
-            Quantum RNG
+            Quantum Coin Flip
           </h1>
         </header>
         <div className="App-body">
-          <p>Your source for <b>truly random</b> numbers, coin tosses, and dice rolls.</p>
-          <RandTypeSelector selected={this.state.randType} onChange={this.handleRandTypeChange} diceType={this.state.diceType} onDiceTypeChange={this.handleDiceTypeChange} />
+          <p>Your source for <b>truly random</b> coin flips.</p>
+          <UniverseActionsForm headsAction={this.state.headsAction} tailsAction={this.state.tailsAction} 
+                               handleHeadsActionChange={this.handleHeadsActionChange} 
+                               handleTailsActionChange={this.handleTailsActionChange} />
           <GoButton pushed={this.state.buttonPushed} lastResult={lastResult} handleClick={this.handleGoPress} />
-          <Login />
-          <Clock />
           <OutlinedBorder color="yellow" pre={
             <p>I go before!</p>
           }>
             <HistoryDisplay historyItems={this.state.history} />
           </OutlinedBorder>
+          <Login />
+          <Clock />
         </div>
       </div>
     );

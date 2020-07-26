@@ -1,6 +1,6 @@
 {
-  "short_name": "Quantum RNG",
-  "name": "Quantum Random Number Generator",
+  "short_name": "Quantum Coin Flip",
+  "name": "Quantum Coin Flip",
   "icons": [
     {
       "src": "quaternion_64.ico",
