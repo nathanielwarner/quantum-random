@@ -14,12 +14,13 @@ class App extends React.Component {
     super(props);
     this.state = {
       randType: "coinFlip", 
+      diceType: 8,
       buttonPushed: false,
       history: [
         {"type": "coinFlip", "result": "Heads"},
         {"type": "coinFlip", "result": "Heads"},
         {"type": "coinFlip", "result": "Tails"},
-        {"type": "diceRollD8", "result": "4"},
+        {"type": "diceRoll", "result": "4"},
         {"type": "coinFlip", "result": "Heads"}
       ]
     };
@@ -27,6 +28,10 @@ class App extends React.Component {
 
   handleRandTypeChange = (e) => {
     this.setState({randType: e.target.value});
+  }
+
+  handleDiceTypeChange = (e) => {
+    this.setState({diceType: e.target.value});
   }
 
   getQuantumRandomSelection(numClasses, callback) {
@@ -71,11 +76,11 @@ class App extends React.Component {
     }
   }
 
-  diceRollD6Callback = (result) => {
+  diceRollCallback = (result) => {
     if (result < 0) {
       this.pushAPIErrorResult();
     } else {
-      this.pushNewResult("diceRollD8", (result + 1).toString());
+      this.pushNewResult("diceRoll", (result + 1).toString());
     }
   }
 
@@ -84,8 +89,8 @@ class App extends React.Component {
       case "coinFlip":
         this.getQuantumRandomSelection(2, this.coinFlipCallback);
         break;
-      case "diceRollD8":
-        this.getQuantumRandomSelection(8, this.diceRollD6Callback);
+      case "diceRoll":
+        this.getQuantumRandomSelection(this.state.diceType, this.diceRollCallback);
         break;
       default:
         this.pushUnexpectedErrorResult();
@@ -107,7 +112,7 @@ class App extends React.Component {
         </header>
         <div className="App-body">
           <p>Your source for <b>truly random</b> numbers, coin tosses, and dice rolls.</p>
-          <RandTypeSelector selected={this.state.randType} onChange={this.handleRandTypeChange} />
+          <RandTypeSelector selected={this.state.randType} onChange={this.handleRandTypeChange} diceType={this.state.diceType} onDiceTypeChange={this.handleDiceTypeChange} />
           <GoButton pushed={this.state.buttonPushed} lastResult={lastResult} handleClick={this.handleGoPress} />
           <Login />
           <Clock />
