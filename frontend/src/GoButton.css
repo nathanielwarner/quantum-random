@@ -8,6 +8,7 @@
   color: white;
   text-transform: uppercase;
   font-size: 16pt;
+  cursor: grab;
   outline: none;
   border-color: yellow;
   transition-duration: 0.4s;
@@ -16,4 +17,9 @@
 .GoButton:hover {
   background-color: yellow;
   color: black;
+}
+
+.disabled-btn {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

@@ -6,7 +6,6 @@ import GoButton from './GoButton';
 import HistoryItem from './HistoryItem';
 import HistoryDisplay from './HistoryDisplay';
 import './App.css';
-import OutlinedBorder from './OutlinedBorder';
 import Login from './Login';
 import Clock from './Clock';
 
@@ -18,11 +17,7 @@ class App extends React.Component {
       gotResult: false,
       headsAction: "Ask that special someone out",
       tailsAction: "Watch Netflix",
-      history: [
-        new HistoryItem(true),
-        new HistoryItem(true, "Do something risky", "Do something safe"),
-        new HistoryItem(false)
-      ]
+      history: []
     };
   }
 
@@ -69,7 +64,7 @@ class App extends React.Component {
         this.showError(result);
         break;
     }
-    this.setState({awaitingResult: false});
+    this.setState({awaitingResult: false, headsAction: "", tailsAction: ""});
   }
 
   handleGoPress = (e) => {
@@ -95,11 +90,9 @@ class App extends React.Component {
                                handleHeadsActionChange={this.handleHeadsActionChange} 
                                handleTailsActionChange={this.handleTailsActionChange} />
           <GoButton awaitingResult={this.state.awaitingResult} gotResult={this.state.gotResult} lastResult={lastResult} handleClick={this.handleGoPress} />
-          <OutlinedBorder color="yellow" pre={
-            <p>I go before!</p>
-          }>
+          {this.state.history.length > 0 &&
             <HistoryDisplay historyItems={this.state.history} />
-          </OutlinedBorder>
+          }
           <Login />
           <Clock />
         </div>

@@ -17,7 +17,7 @@ class GoButton extends React.Component {
       text = "Flip";
     }
     return (
-      <button className="GoButton" onClick={this.props.handleClick}>
+      <button className={`GoButton ${this.props.awaitingResult ? "disabled-btn" : ""}`} onClick={this.props.handleClick}>
         {text}
       </button>
     );
