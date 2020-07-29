@@ -8,6 +8,7 @@ import HistoryDisplay from './HistoryDisplay';
 import './App.css';
 import Login from './Login';
 import Clock from './Clock';
+import Coin from './Coin';
 
 class App extends React.Component {
   constructor(props) {
@@ -95,6 +96,7 @@ class App extends React.Component {
           }
           <Login />
           <Clock />
+          <Coin />
         </div>
       </div>
     );
