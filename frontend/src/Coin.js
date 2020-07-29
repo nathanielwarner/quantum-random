@@ -6,19 +6,29 @@ function CoinCore(props) {
 
   const [hovered, setHover] = useState(false);
   const [active, setActive] = useState(false);
+  const [speed, setSpeed] = useState(false);
 
-  useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01));
+  useFrame(() => {
+    if (active) {
+      if (speed < 0.2) {
+        setSpeed(speed + 0.005);
+      }
+      mesh.current.rotation.x += speed;
+    } else {
+      mesh.current.rotation.x = Math.PI / 2;
+      setSpeed(0);
+    }
+  });
 
   return (
     <mesh
       {...props}
       ref={mesh}
-      scale={active ? [1.5, 1.5, 1.5] : [1, 1, 1]}
       onClick={(e) => setActive(!active)}
       onPointerOver={(e) => setHover(true)}
       onPointerOut={(e) => setHover(false)}>
-      <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshStandardMaterial attach="material" color={hovered ? 'hotpink' : 'orange'} />
+        <cylinderBufferGeometry attach="geometry" args={[3, 3, 0.25, 100, 1]} />
+        <meshStandardMaterial attach="material" color={hovered ? 'hotpink' : 'orange'} />
     </mesh>
   );
 }
@@ -28,8 +38,7 @@ function Coin(props) {
     <Canvas pixelRatio={window.devicePixelRatio}>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      <CoinCore position={[-1.2, 0, 0]} />
-      <CoinCore position={[1.2, 0, 0]} />
+      <CoinCore position={[0, 0, 0]} />
     </Canvas>
   );
 }
