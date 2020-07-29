@@ -1,46 +1,44 @@
-import React, {useRef, useState} from 'react';
-import {Canvas, useFrame} from 'react-three-fiber';
+import React from 'react';
+import * as THREE from 'three';
 
-function CoinCore(props) {
-  const mesh = useRef();
+class Coin extends React.Component {
+  componentDidMount() {
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 2000);
+    var renderer = new THREE.WebGLRenderer({alpha: true, antialias: true, canvas: this.canvas});
+    renderer.setPixelRatio(window.devicePixelRatio);
+    
+    //renderer.setSize(600, 600);
+    this.mount.appendChild(renderer.domElement);
 
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-  const [speed, setSpeed] = useState(false);
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.25);
+    scene.add(ambientLight);
 
-  useFrame(() => {
-    if (active) {
-      if (speed < 0.2) {
-        setSpeed(speed + 0.005);
-      }
-      mesh.current.rotation.x += speed;
-    } else {
-      mesh.current.rotation.x = Math.PI / 2;
-      setSpeed(0);
-    }
-  });
+    var dirLight = new THREE.DirectionalLight(0xffffff, 0.75);
+    dirLight.position.set(0, 0, 1).normalize();
+    scene.add(dirLight);
+    
+    var geometry = new THREE.CylinderGeometry(2, 2, 0.1, 100, 1, false);
+    var material = new THREE.MeshStandardMaterial({color: "yellow"});
+    var cylinder = new THREE.Mesh(geometry, material);
+    cylinder.position.set(0, 0, 0);
+    scene.add(cylinder);
 
-  return (
-    <mesh
-      {...props}
-      ref={mesh}
-      onClick={(e) => setActive(!active)}
-      onPointerOver={(e) => setHover(true)}
-      onPointerOut={(e) => setHover(false)}>
-        <cylinderBufferGeometry attach="geometry" args={[3, 3, 0.25, 100, 1]} />
-        <meshStandardMaterial attach="material" color={hovered ? 'hotpink' : 'orange'} />
-    </mesh>
-  );
-}
+    camera.position.z = 5;
+    var animate = () => {
+      requestAnimationFrame(animate);
+      cylinder.rotation.x += 0.01;
+      renderer.render(scene, camera);
+    };
+    animate();
+  }
 
-function Coin(props) {
-  return (
-    <Canvas pixelRatio={window.devicePixelRatio}>
-      <ambientLight />
-      <pointLight position={[10, 10, 10]} />
-      <CoinCore position={[0, 0, 0]} />
-    </Canvas>
-  );
+  render() {
+    return (
+    <div ref={ref => (this.mount = ref)}>
+      <canvas width="50" height="50" ref={ref => {this.canvas = ref}}/>
+    </div>);
+  }
 }
 
 export default Coin;
