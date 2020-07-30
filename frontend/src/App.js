@@ -96,7 +96,7 @@ class App extends React.Component {
           }
           <Login />
           <Clock />
-          <Coin />
+          <Coin flipping={this.state.awaitingResult} handleClick={this.handleGoPress} />
         </div>
       </div>
     );

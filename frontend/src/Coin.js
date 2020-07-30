@@ -25,11 +25,40 @@ class Coin extends React.Component {
     scene.add(cylinder);
 
     camera.position.z = 5;
+
+    var raycaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2();
+    var pendingClick = false;
+
+    var onMouseClick = (event) => {
+      console.log(event);
+      mouse.x = (event.offsetX / this.canvas.width) * 2 - 1;
+      mouse.y = - (event.offsetY / this.canvas.height) * 2 + 1;
+      console.log(mouse);
+      pendingClick = true;
+    }
+
     var animate = () => {
       requestAnimationFrame(animate);
-      cylinder.rotation.x += 0.01;
+      if (pendingClick) {
+        raycaster.setFromCamera(mouse, camera);
+        var intersects = raycaster.intersectObject(cylinder);
+        if (intersects.length > 0) {
+          this.props.handleClick();
+        }
+        pendingClick = false;
+      }
+      
+      if (this.props.flipping) {
+        cylinder.rotation.x += 0.01;
+      } else {
+        cylinder.rotation.x = Math.PI / 2;
+      }
       renderer.render(scene, camera);
     };
+
+    this.canvas.addEventListener('click', onMouseClick, false);
+    
     animate();
   }
 
