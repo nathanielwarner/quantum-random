@@ -10,7 +10,9 @@ class Coin extends React.Component {
     var renderer = new THREE.WebGLRenderer({alpha: true, antialias: true, canvas: this.canvas});
     renderer.setPixelRatio(window.devicePixelRatio);
     
-    //renderer.setSize(600, 600);
+    const WIDTH = 200;
+    const HEIGHT = 200;
+    renderer.setSize(WIDTH, HEIGHT);
     this.mount.appendChild(renderer.domElement);
 
     var ambientLight = new THREE.AmbientLight(0xffffff, 0.25);
@@ -20,14 +22,14 @@ class Coin extends React.Component {
     dirLight.position.set(0, 0, 1).normalize();
     scene.add(dirLight);
     
-    var geometry = new THREE.CylinderGeometry(1.8, 1.8, 0.1, 100, 1, false);
+    var geometry = new THREE.CylinderGeometry(1.8, 1.8, 0.1, 500, 1, false);
     var material = new THREE.MeshStandardMaterial({color: 0x252433});
     var cylinder = new THREE.Mesh(geometry, material);
     cylinder.position.set(0, 0, 0);
     scene.add(cylinder);
 
     var edges = new THREE.EdgesGeometry(cylinder.geometry);
-    var lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: "yellow"}));
+    var lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: "yellow", linewidth: 2}));
     scene.add(lines);
 
     camera.position.z = 5;
@@ -37,10 +39,8 @@ class Coin extends React.Component {
     var pendingClick = false;
 
     var onMouseClick = (event) => {
-      console.log(event);
-      mouse.x = (event.offsetX / this.canvas.width) * 2 - 1;
-      mouse.y = - (event.offsetY / this.canvas.height) * 2 + 1;
-      console.log(mouse);
+      mouse.x = (event.offsetX / WIDTH) * 2 - 1;
+      mouse.y = - (event.offsetY / HEIGHT) * 2 + 1;
       pendingClick = true;
     }
 
@@ -89,7 +89,7 @@ class Coin extends React.Component {
       <div className="CoinStatusDisplay">
         {text}
       </div>
-      <canvas width="100" height="100" ref={ref => {this.canvas = ref}}/>
+      <canvas ref={ref => {this.canvas = ref}}/>
     </div>);
   }
 }
