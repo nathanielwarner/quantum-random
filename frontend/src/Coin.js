@@ -1,6 +1,8 @@
 import React from 'react';
 import * as THREE from 'three';
 
+import './Coin.css';
+
 class Coin extends React.Component {
   componentDidMount() {
     var scene = new THREE.Scene();
@@ -18,11 +20,15 @@ class Coin extends React.Component {
     dirLight.position.set(0, 0, 1).normalize();
     scene.add(dirLight);
     
-    var geometry = new THREE.CylinderGeometry(2, 2, 0.1, 100, 1, false);
-    var material = new THREE.MeshStandardMaterial({color: "yellow"});
+    var geometry = new THREE.CylinderGeometry(1.8, 1.8, 0.1, 100, 1, false);
+    var material = new THREE.MeshStandardMaterial({color: 0x252433});
     var cylinder = new THREE.Mesh(geometry, material);
     cylinder.position.set(0, 0, 0);
     scene.add(cylinder);
+
+    var edges = new THREE.EdgesGeometry(cylinder.geometry);
+    var lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: "yellow"}));
+    scene.add(lines);
 
     camera.position.z = 5;
 
@@ -49,11 +55,14 @@ class Coin extends React.Component {
         pendingClick = false;
       }
       
-      if (this.props.flipping) {
-        cylinder.rotation.x += 0.01;
+      if (this.props.awaitingResult) {
+        cylinder.rotation.x += 0.1;
       } else {
         cylinder.rotation.x = Math.PI / 2;
       }
+
+      lines.rotation.x = cylinder.rotation.x;
+
       renderer.render(scene, camera);
     };
 
@@ -63,9 +72,24 @@ class Coin extends React.Component {
   }
 
   render() {
+    let text;
+    if (this.props.awaitingResult) {
+      text = "Please wait...";
+    } else if (this.props.gotResult) {
+      if (this.props.lastResult.isHeads) {
+        text = "Heads";
+      } else {
+        text = "Tails";
+      }
+    } else {
+      text = "Flip";
+    }
     return (
-    <div ref={ref => (this.mount = ref)}>
-      <canvas width="50" height="50" ref={ref => {this.canvas = ref}}/>
+    <div className="Coin" ref={ref => (this.mount = ref)}>
+      <div className="CoinStatusDisplay">
+        {text}
+      </div>
+      <canvas width="100" height="100" ref={ref => {this.canvas = ref}}/>
     </div>);
   }
 }

@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 
 import UniverseActionsForm from './UniverseActionsForm';
-import GoButton from './GoButton';
 import HistoryItem from './HistoryItem';
 import HistoryDisplay from './HistoryDisplay';
 import './App.css';
@@ -90,13 +89,12 @@ class App extends React.Component {
           <UniverseActionsForm headsAction={this.state.headsAction} tailsAction={this.state.tailsAction} 
                                handleHeadsActionChange={this.handleHeadsActionChange} 
                                handleTailsActionChange={this.handleTailsActionChange} />
-          <GoButton awaitingResult={this.state.awaitingResult} gotResult={this.state.gotResult} lastResult={lastResult} handleClick={this.handleGoPress} />
+          <Coin awaitingResult={this.state.awaitingResult} gotResult={this.state.gotResult} lastResult={lastResult} handleClick={this.handleGoPress} />
           {this.state.history.length > 0 &&
             <HistoryDisplay historyItems={this.state.history} />
           }
           <Login />
           <Clock />
-          <Coin flipping={this.state.awaitingResult} handleClick={this.handleGoPress} />
         </div>
       </div>
     );

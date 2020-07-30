@@ -1,0 +1,15 @@
+.Coin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.Coin .CoinStatusDisplay {
+  position: absolute;
+  z-index: 100;
+  pointer-events: none;
+  color: white;
+  text-transform: uppercase;
+  font-size: 16pt;
+}
