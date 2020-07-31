@@ -1,28 +1,33 @@
 const axios = require('axios');
-const math = require('mathjs');
 
 const API_URL = "https://qrng.anu.edu.au/API/jsonI.php?type=hex16&length=1"
 
+/**
+ * Returns an integer in the range [0, numClasses)
+ */
 async function getQuantumRandom(numClasses) {
-  if (numClasses == 2) {
-    const size = 1
-    const fullUrl = API_URL + '&size=' + size;
-    console.log(fullUrl);
+  console.log('\nGetting random number x, such that 0 <= x < ' + numClasses);
+  const numBits = Math.ceil(Math.log2(numClasses));
+  const numBytes = Math.ceil(numBits / 8); // The QRNG API returns bytes
+  const numExtraBits = numBytes * 8 - numBits;
+  const fullUrl = API_URL + '&size=' + numBytes;
+
+  let resultInt = numClasses;
+  // Keep getting numbers until it's in the range we need. Credit to Henry Wisniewski for this idea.
+  while (resultInt >= numClasses) {
     const response = await axios.get(fullUrl);
     const data = response.data;
     console.log(data);
-    if (data.success === true && data.type === 'string' && data.length === 1 && data.size === size) {
-      const resultInt = parseInt(data.data, 16);
+    if (data.success === true && data.type === 'string' && data.length === 1 && data.size === numBytes) {
+      resultInt = parseInt(data.data, 16);
       console.log(resultInt);
-      const ret = Math.floor(resultInt / 128);
-      console.log(ret);
-      return ret;
+      resultInt = resultInt >>> numExtraBits;
+      console.log(resultInt);
     } else {
       throw Error('API returned invalid response');
     }
-  } else {
-    throw Error('Expected 2 classes');
   }
+  return resultInt;
 }
 
 module.exports = {
