@@ -16,7 +16,7 @@ class HistoryDisplay extends React.Component {
               {historyItem.headsAction}
             </div>
             <div className={historyItem.isHeads ? "parallel-universe" : "our-universe"}>
-              {historyItem.isTails && rightArrow}
+              {!(historyItem.isHeads) && rightArrow}
               {historyItem.tailsAction}
             </div>
           </div>
