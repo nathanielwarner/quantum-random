@@ -11,5 +11,7 @@
   pointer-events: none;
   color: white;
   text-transform: uppercase;
-  font-size: 16pt;
+  font-size: 24pt;
+  font-family: 'Titillium Web';
+  font-weight: 700;
 }

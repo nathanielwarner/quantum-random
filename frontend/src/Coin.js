@@ -74,7 +74,7 @@ class Coin extends React.Component {
   render() {
     let text;
     if (this.props.awaitingResult) {
-      text = "Please wait...";
+      text = "...";
     } else if (this.props.gotResult) {
       if (this.props.lastResult.isHeads) {
         text = "Heads";

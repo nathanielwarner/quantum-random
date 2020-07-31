@@ -1,9 +1,17 @@
 .UniverseActionsForm {
+  margin: 0.2em;
   display: flex;
   flex-direction: column;
 }
 
 .UniverseActionsForm * {
   margin: 0.3em;
-  font-family: monospace;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.95em;
+}
+
+.UniverseActionsForm input {
+  background-color: black;
+  border: 2px solid #6d6a95;
+  color: white;
 }
