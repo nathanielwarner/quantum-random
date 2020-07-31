@@ -17,7 +17,7 @@ class App extends React.Component {
       gotResult: false,
       headsAction: "Ask that special someone out",
       tailsAction: "Watch Netflix",
-      history: []
+      history: [new HistoryItem(true, "Example Heads Action", "Example Tails Action")]
     };
   }
 
