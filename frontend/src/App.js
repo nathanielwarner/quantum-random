@@ -6,7 +6,6 @@ import HistoryItem from './HistoryItem';
 import HistoryDisplay from './HistoryDisplay';
 import './App.css';
 import Login from './Login';
-import Clock from './Clock';
 import Coin from './Coin';
 
 async function getQuantumRandomSelection(numClasses) {
@@ -23,7 +22,7 @@ class App extends React.Component {
       gotResult: false,
       headsAction: "Ask that special someone out",
       tailsAction: "Watch Netflix",
-      history: [new HistoryItem(true, "Example Heads Action", "Example Tails Action")]
+      history: [new HistoryItem(new Date(Date.now()), true, "Example Heads Action", "Example Tails Action")]
     };
   }
 
@@ -37,7 +36,7 @@ class App extends React.Component {
 
   pushNewResult = (result) => {
     let history = this.state.history;
-    history.push(result);
+    history.unshift(result);
     this.setState({history: history, awaitingResult: false, headsAction: "", tailsAction: "", gotResult: true});
   }
 
@@ -49,10 +48,10 @@ class App extends React.Component {
   coinFlipCallback = (result) => {
     switch (result) {
       case 0:
-        this.pushNewResult(new HistoryItem(true, this.state.headsAction, this.state.tailsAction));
+        this.pushNewResult(new HistoryItem(new Date(Date.now()), true, this.state.headsAction, this.state.tailsAction));
         break;
       case 1:
-        this.pushNewResult(new HistoryItem(false, this.state.headsAction, this.state.tailsAction));
+        this.pushNewResult(new HistoryItem(new Date(Date.now()), false, this.state.headsAction, this.state.tailsAction));
         break;
       default:
         this.showError("Quantum API call did not work");
@@ -69,8 +68,7 @@ class App extends React.Component {
   
   render() {
     const history = this.state.history;
-    const lenHistory = history.length;
-    const lastResult = lenHistory > 0 ? history[lenHistory - 1] : null;
+    const lastResult = history.length > 0 ? history[0] : null;
     return (
       <div className="App">
         <header className="App-header">
@@ -85,11 +83,10 @@ class App extends React.Component {
                                handleHeadsActionChange={this.handleHeadsActionChange} 
                                handleTailsActionChange={this.handleTailsActionChange} />
           <Coin awaitingResult={this.state.awaitingResult} gotResult={this.state.gotResult} lastResult={lastResult} handleClick={this.handleGoPress} />
-          {this.state.history.length > 0 &&
-            <HistoryDisplay historyItems={this.state.history} />
+          {history.length > 0 &&
+            <HistoryDisplay historyItems={history} />
           }
           <Login />
-          <Clock />
         </div>
       </div>
     );

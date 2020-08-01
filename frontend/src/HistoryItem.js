@@ -1,5 +1,6 @@
 class HistoryItem {
-  constructor(isHeads, headsAction, tailsAction) {
+  constructor(dateTime, isHeads, headsAction, tailsAction) {
+    this.dateTime = dateTime;
     this.isHeads = isHeads;
     this.headsAction = headsAction;
     this.tailsAction = tailsAction;
