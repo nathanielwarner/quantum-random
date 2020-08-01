@@ -1,5 +1,8 @@
 import React from 'react';
 import * as THREE from 'three';
+import {LineSegmentsGeometry} from 'three/examples/jsm/lines/LineSegmentsGeometry';
+import {LineMaterial} from 'three/examples/jsm/lines/LineMaterial';
+import {LineSegments2} from 'three/examples/jsm/lines/LineSegments2';
 
 import './Coin.css';
 
@@ -29,7 +32,10 @@ class Coin extends React.Component {
     scene.add(cylinder);
 
     var edges = new THREE.EdgesGeometry(cylinder.geometry);
-    var lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: "yellow", linewidth: 2}));
+    var linesGeom = new LineSegmentsGeometry().setPositions(edges.attributes.position.array);
+    var linesMaterial = new LineMaterial({color: "yellow", linewidth: 4});
+    linesMaterial.resolution.set(WIDTH, HEIGHT);
+    var lines = new LineSegments2(linesGeom, linesMaterial);
     scene.add(lines);
 
     camera.position.z = 5;
