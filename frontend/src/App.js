@@ -9,6 +9,12 @@ import Login from './Login';
 import Clock from './Clock';
 import Coin from './Coin';
 
+async function getQuantumRandomSelection(numClasses) {
+  const response = await axios.get("api/qrng?numClasses=" + numClasses);
+  const result = response.data.result;
+  return result;
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -29,27 +35,15 @@ class App extends React.Component {
     this.setState({tailsAction: e.target.value});
   }
 
-  getQuantumRandomSelection(numClasses, callback) {
-    axios.get("api/qrng?numClasses=" + numClasses)
-      .then(
-        res => {
-          const result = res.data.result;
-          callback(result);
-        },
-        error => {
-          console.log(error);
-          callback(-1);
-        });
-  }
-
   pushNewResult = (result) => {
     let history = this.state.history;
     history.push(result);
-    this.setState({history: history, gotResult: true});
+    this.setState({history: history, awaitingResult: false, headsAction: "", tailsAction: "", gotResult: true});
   }
 
-  showError = (errCode) => {
-    alert("Error");
+  showError = (message) => {
+    alert("Error: " + message);
+    this.setState({awaitingResult: false});
   }
 
   coinFlipCallback = (result) => {
@@ -61,15 +55,16 @@ class App extends React.Component {
         this.pushNewResult(new HistoryItem(false, this.state.headsAction, this.state.tailsAction));
         break;
       default:
-        this.showError(result);
+        this.showError("Quantum API call did not work");
         break;
     }
-    this.setState({awaitingResult: false, headsAction: "", tailsAction: ""});
   }
 
   handleGoPress = (e) => {
     this.setState({awaitingResult: true});
-    this.getQuantumRandomSelection(2, this.coinFlipCallback);
+    getQuantumRandomSelection(2)
+      .then(result => this.coinFlipCallback(result))
+      .catch(error => this.showError("Unable to make request to backend"));
   }
   
   render() {
