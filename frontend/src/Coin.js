@@ -3,6 +3,10 @@ import * as THREE from 'three';
 import {LineSegmentsGeometry} from 'three/examples/jsm/lines/LineSegmentsGeometry';
 import {LineMaterial} from 'three/examples/jsm/lines/LineMaterial';
 import {LineSegments2} from 'three/examples/jsm/lines/LineSegments2';
+import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer';
+import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass';
+import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import {SMAAPass} from 'three/examples/jsm/postprocessing/SMAAPass';
 
 import './Coin.css';
 
@@ -45,17 +49,38 @@ class Coin extends React.Component {
 
     camera.position.z = 5;
 
+    var renderScene = new RenderPass(scene, camera, undefined, new THREE.Color("#252433"), true);
+    var bloomPass = new UnrealBloomPass(new THREE.Vector2(WIDTH, HEIGHT), 0.0, -0.8, 0.88);
+    var smaaPass = new SMAAPass(WIDTH, HEIGHT);
+
+    var composer = new EffectComposer(renderer);
+    composer.addPass(renderScene);
+    composer.addPass(bloomPass);
+    composer.addPass(smaaPass);
+
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
+
+    var mouseHasEntered = false;
     var pendingClick = false;
+
+    var onMouseEnter = (event) => {
+      mouseHasEntered = true;
+    }
 
     var onMouseMove = (event) => {
       mouse.x = (event.offsetX / WIDTH) * 2 - 1;
       mouse.y = - (event.offsetY / HEIGHT) * 2 + 1;
     }
 
+    var onMouseLeave = (event) => {
+      mouseHasEntered = false;
+    }
+
     var onMouseClick = (event) => {
-      pendingClick = true;
+      if (!(this.props.awaitingResult)) {
+        pendingClick = true;
+      }
     }
 
     var animate = () => {
@@ -63,14 +88,16 @@ class Coin extends React.Component {
 
       raycaster.setFromCamera(mouse, camera);
       var intersects = raycaster.intersectObject(cylinder);
-      if (intersects.length > 0) {
+      if (mouseHasEntered && intersects.length > 0) {
         this.setState({mouseOver: true});
+        bloomPass.strength = 1.0;
         if (pendingClick) {
           this.props.handleClick();
           pendingClick = false;
         }
       } else {
         this.setState({mouseOver: false});
+        bloomPass.strength = 0.0;
         pendingClick = false;
       }
       
@@ -82,10 +109,12 @@ class Coin extends React.Component {
 
       lines.rotation.x = cylinder.rotation.x;
 
-      renderer.render(scene, camera);
+      composer.render();
     };
 
+    this.canvas.addEventListener('mouseenter', onMouseEnter, false);
     this.canvas.addEventListener('mousemove', onMouseMove, false);
+    this.canvas.addEventListener('mouseleave', onMouseLeave, false);
     this.canvas.addEventListener('click', onMouseClick, false);
     
     animate();
