@@ -17,12 +17,15 @@ async function getQuantumRandomSelection(numClasses) {
 class App extends React.Component {
   constructor(props) {
     super(props);
+    if (!localStorage.getItem("history")) {
+      localStorage.setItem("history", "[]");
+    }
     this.state = {
       awaitingResult: false,
       gotResult: false,
       headsAction: "Ask that special someone out",
       tailsAction: "Watch Netflix",
-      history: [new HistoryItem(new Date(Date.now()), true, "Example Heads Action", "Example Tails Action")]
+      history: JSON.parse(localStorage.getItem("history"))
     };
   }
 
@@ -38,6 +41,7 @@ class App extends React.Component {
     let history = this.state.history;
     history.unshift(result);
     this.setState({history: history, awaitingResult: false, headsAction: "", tailsAction: "", gotResult: true});
+    localStorage.setItem("history", JSON.stringify(history));
   }
 
   showError = (message) => {
@@ -48,10 +52,10 @@ class App extends React.Component {
   coinFlipCallback = (result) => {
     switch (result) {
       case 0:
-        this.pushNewResult(new HistoryItem(new Date(Date.now()), true, this.state.headsAction, this.state.tailsAction));
+        this.pushNewResult(new HistoryItem(Date.now(), true, this.state.headsAction, this.state.tailsAction));
         break;
       case 1:
-        this.pushNewResult(new HistoryItem(new Date(Date.now()), false, this.state.headsAction, this.state.tailsAction));
+        this.pushNewResult(new HistoryItem(Date.now(), false, this.state.headsAction, this.state.tailsAction));
         break;
       default:
         this.showError("Quantum API call did not work");

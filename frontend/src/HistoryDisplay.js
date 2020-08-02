@@ -21,7 +21,7 @@ class HistoryDisplay extends React.Component {
     const historyItemDisplays = historyItems.map((historyItem, index) => 
       <li key={index}>
         {historyItem.isHeads ? "Heads" : "Tails"}&nbsp;
-        <span className="rightAligned">{historyItem.dateTime.toLocaleString()}</span>
+        <span className="rightAligned">{(new Date(historyItem.dateTime)).toLocaleString()}</span>
         {historyItem.headsAction && historyItem.tailsAction &&
           <div className="universe-outcomes">
             <div className={historyItem.isHeads ? "our-universe" : "parallel-universe"}>
@@ -43,7 +43,7 @@ class HistoryDisplay extends React.Component {
           <Login />
         }
         <ul>{historyItemDisplays}</ul>
-        <p>Save your history by signing in or making an account!</p>
+        <p>Sync your history between devices by signing in or making an account!</p>
       </div>
     );
   }
