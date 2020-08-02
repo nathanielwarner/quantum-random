@@ -7,6 +7,7 @@ import HistoryDisplay from './HistoryDisplay';
 import './App.css';
 import Login from './Login';
 import Coin from './Coin';
+import FAQs from './FAQs';
 
 async function getQuantumRandomSelection(numClasses) {
   const response = await axios.get("api/qrng?numClasses=" + numClasses);
@@ -91,6 +92,7 @@ class App extends React.Component {
             <HistoryDisplay historyItems={history} />
           }
           <Login />
+          <FAQs />
         </div>
       </div>
     );
