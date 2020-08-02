@@ -7,6 +7,11 @@ import {LineSegments2} from 'three/examples/jsm/lines/LineSegments2';
 import './Coin.css';
 
 class Coin extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {mouseOver: false};
+  }
+
   componentDidMount() {
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 2000);
@@ -44,20 +49,28 @@ class Coin extends React.Component {
     var mouse = new THREE.Vector2();
     var pendingClick = false;
 
-    var onMouseClick = (event) => {
+    var onMouseMove = (event) => {
       mouse.x = (event.offsetX / WIDTH) * 2 - 1;
       mouse.y = - (event.offsetY / HEIGHT) * 2 + 1;
+    }
+
+    var onMouseClick = (event) => {
       pendingClick = true;
     }
 
     var animate = () => {
       requestAnimationFrame(animate);
-      if (pendingClick) {
-        raycaster.setFromCamera(mouse, camera);
-        var intersects = raycaster.intersectObject(cylinder);
-        if (intersects.length > 0) {
+
+      raycaster.setFromCamera(mouse, camera);
+      var intersects = raycaster.intersectObject(cylinder);
+      if (intersects.length > 0) {
+        this.setState({mouseOver: true});
+        if (pendingClick) {
           this.props.handleClick();
+          pendingClick = false;
         }
+      } else {
+        this.setState({mouseOver: false});
         pendingClick = false;
       }
       
@@ -72,6 +85,7 @@ class Coin extends React.Component {
       renderer.render(scene, camera);
     };
 
+    this.canvas.addEventListener('mousemove', onMouseMove, false);
     this.canvas.addEventListener('click', onMouseClick, false);
     
     animate();
@@ -91,7 +105,7 @@ class Coin extends React.Component {
       text = "Flip";
     }
     return (
-    <div className="Coin" ref={ref => (this.mount = ref)}>
+    <div className={`Coin ${this.state.mouseOver ? "MouseOver" : ""}`} ref={ref => (this.mount = ref)}>
       <div className="CoinStatusDisplay">
         {text}
       </div>
