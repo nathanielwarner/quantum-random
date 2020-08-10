@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Login from './Login';
-
 import './HistoryDisplay.css';
 
 const rightArrow = <span>&#10140;&nbsp;</span>
@@ -39,9 +37,6 @@ class HistoryDisplay extends React.Component {
     return (
       <div className="History">
         <h2>History</h2>
-        {this.state.showLogin &&
-          <Login />
-        }
         <ul>{historyItemDisplays}</ul>
         <p>Sync your history between devices by signing in or making an account!</p>
       </div>

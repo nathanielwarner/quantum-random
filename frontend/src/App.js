@@ -5,9 +5,9 @@ import UniverseActionsForm from './UniverseActionsForm';
 import HistoryItem from './HistoryItem';
 import HistoryDisplay from './HistoryDisplay';
 import './App.css';
-import Login from './Login';
 import Coin from './Coin';
 import FAQs from './FAQs';
+import AuxiliaryDisplay from './AuxiliaryDisplay';
 
 async function getQuantumRandomSelection(numClasses) {
   const response = await axios.get("api/qrng?numClasses=" + numClasses);
@@ -26,6 +26,8 @@ class App extends React.Component {
       gotResult: false,
       headsAction: "Ask that special someone out",
       tailsAction: "Watch Netflix",
+      auxDisplay: "Last action test",
+      showError: false,
       history: JSON.parse(localStorage.getItem("history"))
     };
   }
@@ -39,15 +41,15 @@ class App extends React.Component {
   }
 
   pushNewResult = (result) => {
+    const newAction = result.isHeads ? result.headsAction : result.tailsAction;
     let history = this.state.history;
     history.unshift(result);
-    this.setState({history: history, awaitingResult: false, headsAction: "", tailsAction: "", gotResult: true});
+    this.setState({history: history, awaitingResult: false, headsAction: "", tailsAction: "", gotResult: true, showError: false, auxDisplay: newAction});
     localStorage.setItem("history", JSON.stringify(history));
   }
 
   showError = (message) => {
-    alert("Error: " + message);
-    this.setState({awaitingResult: false});
+    this.setState({awaitingResult: false, showError: true, auxDisplay: message});
   }
 
   coinFlipCallback = (result) => {
@@ -88,10 +90,10 @@ class App extends React.Component {
                                handleHeadsActionChange={this.handleHeadsActionChange} 
                                handleTailsActionChange={this.handleTailsActionChange} />
           <Coin awaitingResult={this.state.awaitingResult} gotResult={this.state.gotResult} lastResult={lastResult} handleClick={this.handleGoPress} />
+          <AuxiliaryDisplay text={this.state.auxDisplay} showError={this.state.showError} />
           {history.length > 0 &&
             <HistoryDisplay historyItems={history} />
           }
-          <Login />
           <FAQs />
         </div>
       </div>
