@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import UniverseActionsForm from './UniverseActionsForm';
 import HistoryItem from './HistoryItem';
-import HistoryDisplay from './HistoryDisplay';
+import History from './History';
 import './App.css';
 import Coin from './Coin';
 import FAQs from './FAQs';
@@ -19,7 +19,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     if (!localStorage.getItem("history")) {
-      localStorage.setItem("history", "[]");
+      localStorage.setItem("history", '[{"dateTime": 1597086556579, "isHeads": false, "headsAction": "Test Heads", "tailsAction": "Test Tails"}]');
     }
     this.state = {
       awaitingResult: false,
@@ -72,6 +72,13 @@ class App extends React.Component {
       .then(result => this.coinFlipCallback(result))
       .catch(error => this.showError("Unable to make request to backend"));
   }
+
+  handleHistoryDeleteClick = (e) => {
+    const id = e.currentTarget.getAttribute("itemident");
+    let history = this.state.history;
+    history.splice(id, 1);
+    this.setState({history: history});
+  }
   
   render() {
     const history = this.state.history;
@@ -92,7 +99,7 @@ class App extends React.Component {
           <Coin awaitingResult={this.state.awaitingResult} gotResult={this.state.gotResult} lastResult={lastResult} handleClick={this.handleGoPress} />
           <AuxiliaryDisplay text={this.state.auxDisplay} showError={this.state.showError} />
           {history.length > 0 &&
-            <HistoryDisplay historyItems={history} />
+            <History historyItems={history} onDeleteClick={this.handleHistoryDeleteClick} />
           }
           <FAQs />
         </div>

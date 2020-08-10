@@ -1,0 +1,28 @@
+.History {
+  margin: 1rem 3rem 1rem 3rem;
+  align-self: stretch;
+}
+
+.HistoryHeader {
+  font-style: italic;
+}
+
+.History li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.HistoryDeleteButton {
+  background-color: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.our-universe {
+  font-weight: bold;
+}
+
+.parallel-universe {
+  text-decoration: line-through;
+}

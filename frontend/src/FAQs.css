@@ -1,13 +1,8 @@
 .FAQs {
-  margin: 3rem;
-  font-family: 'Titillium Web', sans-serif;
-  font-weight: 300;
+  margin: 1rem 3rem 1rem 3rem;
+  align-self: stretch;
 }
 
-.FAQs a:link {
-  color: white;
-}
-
-.FAQs a:visited {
+.FAQs a:link, a:visited, a:hover {
   color: white;
 }
