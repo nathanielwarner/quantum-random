@@ -16,6 +16,7 @@
   background-color: transparent;
   color: white;
   border: none;
+  outline: none;
   cursor: pointer;
 }
 
