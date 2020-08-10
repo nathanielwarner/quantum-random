@@ -49,7 +49,7 @@ class App extends React.Component {
   }
 
   showError = (message) => {
-    this.setState({awaitingResult: false, showError: true, auxDisplay: message});
+    this.setState({awaitingResult: false, showError: true, auxDisplay: message, gotResult: false});
   }
 
   coinFlipCallback = (result) => {

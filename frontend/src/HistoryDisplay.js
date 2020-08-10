@@ -5,15 +5,6 @@ import './HistoryDisplay.css';
 const rightArrow = <span>&#10140;&nbsp;</span>
 
 class HistoryDisplay extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {showLogin: false};
-  }
-
-  activateLogin = () => {
-    this.setState({showLogin: true});
-  }
-
   render() {
     const historyItems = this.props.historyItems;
     const historyItemDisplays = historyItems.map((historyItem, index) => 
@@ -38,7 +29,6 @@ class HistoryDisplay extends React.Component {
       <div className="History">
         <h2>History</h2>
         <ul>{historyItemDisplays}</ul>
-        <p>Sync your history between devices by signing in or making an account!</p>
       </div>
     );
   }
