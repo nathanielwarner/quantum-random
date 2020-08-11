@@ -4,6 +4,7 @@ import axios from 'axios';
 import UniverseActionsForm from './UniverseActionsForm';
 import HistoryItem from './HistoryItem';
 import History from './History';
+import HistoryTree from './HistoryTree';
 import './App.css';
 import Coin from './Coin';
 import FAQs from './FAQs';
@@ -19,7 +20,10 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     if (!localStorage.getItem("history")) {
-      localStorage.setItem("history", '[{"dateTime": 1597086556579, "isHeads": false, "headsAction": "Test Heads", "tailsAction": "Test Tails"}]');
+      localStorage.setItem("history", `[
+        {"dateTime": 1597086556579, "isHeads": false, "headsAction": "Watch a movie", "tailsAction": "Read a book"},
+        {"dateTime": 1597086656579, "isHeads": true, "headsAction": "Eat pizza", "tailsAction": "Eat something healthy"}
+      ]`);
     }
     this.state = {
       awaitingResult: false,
@@ -43,7 +47,7 @@ class App extends React.Component {
   pushNewResult = (result) => {
     const newAction = result.isHeads ? result.headsAction : result.tailsAction;
     let history = this.state.history;
-    history.unshift(result);
+    history.push(result);
     this.setState({history: history, awaitingResult: false, headsAction: "", tailsAction: "", gotResult: true, showError: false, auxDisplay: newAction});
     localStorage.setItem("history", JSON.stringify(history));
   }
@@ -82,7 +86,7 @@ class App extends React.Component {
   
   render() {
     const history = this.state.history;
-    const lastResult = history.length > 0 ? history[0] : null;
+    const lastResult = history.length > 0 ? history[history.length - 1] : null;
     return (
       <div className="App">
         <header className="App-header">
@@ -98,6 +102,9 @@ class App extends React.Component {
                                handleTailsActionChange={this.handleTailsActionChange} />
           <Coin awaitingResult={this.state.awaitingResult} gotResult={this.state.gotResult} lastResult={lastResult} handleClick={this.handleGoPress} />
           <AuxiliaryDisplay text={this.state.auxDisplay} showError={this.state.showError} />
+          {history.length > 0 &&
+            <HistoryTree historyItems={history} onDeleteClick={this.handleHistoryDeleteClick} />
+          }
           {history.length > 0 &&
             <History historyItems={history} onDeleteClick={this.handleHistoryDeleteClick} />
           }
