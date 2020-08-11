@@ -6,14 +6,15 @@ import './HistoryTree.css';
 function createTree(list) {
   let tree = {
     name: "Start",
-    children: null
+    children: null,
+    chosen: true
   };
   let head = tree;
 
   list.forEach(historyItem => {
     head.children = [
-      {name: historyItem.headsAction, children: null},
-      {name: historyItem.tailsAction, children: null}
+      {name: historyItem.headsAction, children: null, chosen: historyItem.isHeads},
+      {name: historyItem.tailsAction, children: null, chosen: !historyItem.isHeads}
     ];
     if (historyItem.isHeads) {
       head = head.children[0];
@@ -51,6 +52,8 @@ class HistoryTree extends React.Component {
       if (d.x < x0) x0 = d.x;
     });
 
+    console.log(root);
+
     const svg = d3.select(this.node)
       .attr("viewBox", [0, 0, width, x1 - x0 + root.dx * 2]);
     
@@ -81,14 +84,14 @@ class HistoryTree extends React.Component {
       .attr("transform", d => `translate(${d.y},${d.x})`);
 
     node.append("circle")
-      .attr("fill", d => d.children ? "white" : "gray")
+      .attr("fill", d => d.data.chosen ? "white" : "gray")
       .attr("r", 2.5);
 
     node.append("text")
       .attr("dy", "0.31em")
-      .attr("x", d => d.children ? -6 : 6)
-      .attr("text-anchor", d => d.children ? "end" : "start")
-      .style("fill", d => d.children ? "white" : "gray")
+      .attr("x", d => d.data.chosen ? -6 : 6)
+      .attr("text-anchor", d => d.data.chosen ? "end" : "start")
+      .style("fill", d => d.data.chosen ? "white" : "gray")
       .text(d => d.data.name)
       .clone(true).lower();
   }
