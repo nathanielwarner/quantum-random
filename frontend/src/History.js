@@ -1,6 +1,8 @@
 import React from 'react';
 import {FaTrash} from 'react-icons/fa';
 
+import HistoryTree from './HistoryTree';
+
 import './History.css';
 
 const rightArrow = <span>&#10140;&nbsp;</span>
@@ -36,6 +38,7 @@ class History extends React.Component {
     return (
       <div className="History">
         <h2>History</h2>
+        <HistoryTree historyItems={this.props.historyItems} onDeleteClick={this.props.onDeleteClick} />
         <ul>{historyItemDisplays}</ul>
       </div>
     );

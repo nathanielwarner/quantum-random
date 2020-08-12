@@ -4,7 +4,6 @@ import axios from 'axios';
 import UniverseActionsForm from './UniverseActionsForm';
 import HistoryItem from './HistoryItem';
 import History from './History';
-import HistoryTree from './HistoryTree';
 import './App.css';
 import Coin from './Coin';
 import FAQs from './FAQs';
@@ -102,9 +101,6 @@ class App extends React.Component {
                                handleTailsActionChange={this.handleTailsActionChange} />
           <Coin awaitingResult={this.state.awaitingResult} gotResult={this.state.gotResult} lastResult={lastResult} handleClick={this.handleGoPress} />
           <AuxiliaryDisplay text={this.state.auxDisplay} showError={this.state.showError} />
-          {history.length > 0 &&
-            <HistoryTree historyItems={history} onDeleteClick={this.handleHistoryDeleteClick} />
-          }
           {history.length > 0 &&
             <History historyItems={history} onDeleteClick={this.handleHistoryDeleteClick} />
           }

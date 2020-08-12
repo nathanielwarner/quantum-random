@@ -38,11 +38,11 @@ class HistoryTree extends React.Component {
   createTreeDiagram = () => {
     const historyTree = createTree(this.props.historyItems);
   
-    const width = 800;
+    //const width = 800;
   
     const hierarchy = d3.hierarchy(historyTree);
-    hierarchy.dx = 10;
-    hierarchy.dy = width / (hierarchy.height + 1);
+    hierarchy.dx = 50;
+    hierarchy.dy = 125; //width / (hierarchy.height + 1);
     const root = d3.tree().nodeSize([hierarchy.dx, hierarchy.dy])(hierarchy);
 
     let x0 = Infinity;
@@ -54,13 +54,13 @@ class HistoryTree extends React.Component {
 
     console.log(root);
 
-    const svg = d3.select(this.node)
-      .attr("viewBox", [0, 0, width, x1 - x0 + root.dx * 2]);
+    const svg = d3.select(this.node);
+      //.attr("viewBox", [0, 0, width, x1 - x0 + root.dx * 2]);
     
     svg.selectAll("g").remove();
     
     const g = svg.append("g")
-      .attr("font-size", 10)
+      .attr("font-size", 14)
       .attr("transform", `translate(${root.dy / 3},${root.dx - x0})`);
       
     g.append("g")
@@ -99,7 +99,6 @@ class HistoryTree extends React.Component {
   render() {
     return (
       <div className="HistoryTree">
-        <h2>History</h2>
         <svg ref={node => this.node = node}></svg>
       </div>
     );

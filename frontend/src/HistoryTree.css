@@ -1,6 +1,5 @@
-.HistoryTree {
-  margin: 1rem 3rem 1rem 3rem;
-  align-self: stretch;
+svg {
+  min-width: 100%;
 }
 
 .DeleteButton {
