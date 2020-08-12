@@ -52,7 +52,7 @@ class HistoryTree extends React.Component {
       if (d.x < x0) x0 = d.x;
     });
 
-    console.log(root);
+    //console.log(root);
 
     const svg = d3.select(this.node);
       //.attr("viewBox", [0, 0, width, x1 - x0 + root.dx * 2]);
@@ -60,8 +60,8 @@ class HistoryTree extends React.Component {
     svg.selectAll("g").remove();
     
     const g = svg.append("g")
-      .attr("font-size", 14)
-      .attr("transform", `translate(${root.dy / 3},${root.dx - x0})`);
+      .attr("font-size", 14);
+      //.attr("transform", `translate(${root.dy / 3},${root.dx - x0})`);
       
     g.append("g")
       .attr("fill", "none")
@@ -94,6 +94,13 @@ class HistoryTree extends React.Component {
       .style("fill", d => d.data.chosen ? "white" : "gray")
       .text(d => d.data.name)
       .clone(true).lower();
+    
+    const gNode = g.node();
+    const bbox = gNode.getBBox();
+    //g.attr("viewbox", `${bbox.x}, ${bbox.y}, ${bbox.width}, ${bbox.height}`);
+    g.attr("transform", `translate(${-bbox.x}, ${-bbox.y})`);
+    svg.attr("width", bbox.width);
+    svg.attr("height", bbox.height);
   }
 
   render() {

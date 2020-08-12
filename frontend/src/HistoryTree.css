@@ -1,5 +1,5 @@
-svg {
-  min-width: 100%;
+svg g {
+  display: block;
 }
 
 .DeleteButton {
