@@ -101,11 +101,13 @@ class HistoryTree extends React.Component {
     g.attr("transform", `translate(${-bbox.x}, ${-bbox.y})`);
     svg.attr("width", bbox.width);
     svg.attr("height", bbox.height);
+
+    this.div.scrollTo(bbox.width, 0);
   }
 
   render() {
     return (
-      <div className="HistoryTree">
+      <div className="HistoryTree" ref={div => this.div = div}>
         <svg ref={node => this.node = node}></svg>
       </div>
     );

@@ -1,5 +1,6 @@
-svg g {
-  display: block;
+.HistoryTree {
+  overflow: auto;
+  margin-bottom: 1.5rem;
 }
 
 .DeleteButton {
