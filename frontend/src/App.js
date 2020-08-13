@@ -21,6 +21,7 @@ class App extends React.Component {
     if (!localStorage.getItem("history")) {
       localStorage.setItem("history", `[
         {"dateTime": 1597086556579, "isHeads": false, "headsAction": "Watch a movie", "tailsAction": "Read a book"},
+        {"dateTime": 1593086539392, "isHeads": true, "headsAction": "Do nothing", "tailsAction": "Do something"},
         {"dateTime": 1597086656579, "isHeads": true, "headsAction": "Eat pizza", "tailsAction": "Eat something healthy"}
       ]`);
     }

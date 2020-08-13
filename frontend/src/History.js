@@ -9,7 +9,12 @@ const rightArrow = <span>&#10140;&nbsp;</span>
 
 class History extends React.Component {
   render() {
-    const historyItems = this.props.historyItems;
+    const compFun = (a, b) => {
+      if (a.dateTime < b.dateTime) return -1;
+      else if (a.dateTime === b.dateTime) return 0;
+      else return 1;
+    }
+    const historyItems = this.props.historyItems.sort(compFun);
     const historyItemDisplays = historyItems.map((historyItem, index) => 
       <li key={index}>
         <div className="HistoryHeader">

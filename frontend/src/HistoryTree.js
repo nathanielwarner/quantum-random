@@ -35,14 +35,16 @@ class HistoryTree extends React.Component {
     this.createTreeDiagram();
   }
 
+  onMouseOver = (id) => {
+    //console.log(id);
+  }
+
   createTreeDiagram = () => {
     const historyTree = createTree(this.props.historyItems);
   
-    //const width = 800;
-  
     const hierarchy = d3.hierarchy(historyTree);
-    hierarchy.dx = 50;
-    hierarchy.dy = 125; //width / (hierarchy.height + 1);
+    hierarchy.dx = 75;
+    hierarchy.dy = 150;
     const root = d3.tree().nodeSize([hierarchy.dx, hierarchy.dy])(hierarchy);
 
     let x0 = Infinity;
@@ -52,16 +54,12 @@ class HistoryTree extends React.Component {
       if (d.x < x0) x0 = d.x;
     });
 
-    //console.log(root);
-
     const svg = d3.select(this.node);
-      //.attr("viewBox", [0, 0, width, x1 - x0 + root.dx * 2]);
     
     svg.selectAll("g").remove();
     
     const g = svg.append("g")
       .attr("font-size", 14);
-      //.attr("transform", `translate(${root.dy / 3},${root.dx - x0})`);
       
     g.append("g")
       .attr("fill", "none")
@@ -81,7 +79,8 @@ class HistoryTree extends React.Component {
       .selectAll("g")
       .data(root.descendants())
       .join("g")
-      .attr("transform", d => `translate(${d.y},${d.x})`);
+      .attr("transform", d => `translate(${d.y},${d.x})`)
+      .on("mouseover", (d, i) => this.onMouseOver(i));
 
     node.append("circle")
       .attr("fill", d => d.data.chosen ? "white" : "gray")
@@ -97,10 +96,8 @@ class HistoryTree extends React.Component {
     
     const gNode = g.node();
     const bbox = gNode.getBBox();
-    //g.attr("viewbox", `${bbox.x}, ${bbox.y}, ${bbox.width}, ${bbox.height}`);
     g.attr("transform", `translate(${-bbox.x}, ${-bbox.y})`);
-    svg.attr("width", bbox.width);
-    svg.attr("height", bbox.height);
+    svg.attr("width", bbox.width).attr("height", bbox.height);
 
     this.div.scrollTo(bbox.width, 0);
   }
