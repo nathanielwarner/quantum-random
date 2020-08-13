@@ -11,10 +11,10 @@ function createTree(list) {
   };
   let head = tree;
 
-  list.forEach(historyItem => {
+  list.forEach((historyItem, idx) => {
     head.children = [
-      {name: historyItem.headsAction, children: null, chosen: historyItem.isHeads},
-      {name: historyItem.tailsAction, children: null, chosen: !historyItem.isHeads}
+      {eventId: idx, name: historyItem.headsAction, children: null, chosen: historyItem.isHeads},
+      {eventId: idx, name: historyItem.tailsAction, children: null, chosen: !historyItem.isHeads}
     ];
     if (historyItem.isHeads) {
       head = head.children[0];
@@ -27,19 +27,40 @@ function createTree(list) {
 }
 
 class HistoryTree extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedEvent: null
+    };
+  }
+
   componentDidMount() {
-    this.createTreeDiagram();
+    this.createTreeDiagram(true);
   }
 
   componentDidUpdate() {
     this.createTreeDiagram();
   }
 
-  onMouseOver = (id) => {
-    //console.log(id);
+  onMouseEnter = (eventId) => {
+    if (typeof eventId !== "number") return;
+    this.setState((state, props) => {
+      if (state.selectedEvent !== eventId) {
+        return {selectedEvent: eventId};
+      }
+    });
   }
 
-  createTreeDiagram = () => {
+  onMouseLeave = (eventId) => {
+    if (typeof eventId !== "number") return;
+    this.setState((state, props) => {
+      if (state.selectedEvent === eventId) {
+        return {selectedEvent: null};
+      }
+    });
+  }
+
+  createTreeDiagram = (scrollToEnd = false) => {
     const historyTree = createTree(this.props.historyItems);
   
     const hierarchy = d3.hierarchy(historyTree);
@@ -80,7 +101,8 @@ class HistoryTree extends React.Component {
       .data(root.descendants())
       .join("g")
       .attr("transform", d => `translate(${d.y},${d.x})`)
-      .on("mouseover", (d, i) => this.onMouseOver(i));
+      .on("mouseenter", (d, i) => this.onMouseEnter(d.data.eventId))
+      .on("mouseleave", (d, i) => this.onMouseLeave(d.data.eventId));
 
     node.append("circle")
       .attr("fill", d => d.data.chosen ? "white" : "gray")
@@ -90,6 +112,7 @@ class HistoryTree extends React.Component {
       .attr("dy", "0.31em")
       .attr("x", d => d.data.chosen ? -6 : 6)
       .attr("text-anchor", d => d.data.chosen ? "end" : "start")
+      .style("text-decoration", d => d.data.eventId === this.state.selectedEvent ? "underline" : "none")
       .style("fill", d => d.data.chosen ? "white" : "gray")
       .text(d => d.data.name)
       .clone(true).lower();
@@ -99,7 +122,9 @@ class HistoryTree extends React.Component {
     g.attr("transform", `translate(${-bbox.x}, ${-bbox.y})`);
     svg.attr("width", bbox.width).attr("height", bbox.height);
 
-    this.div.scrollTo(bbox.width, 0);
+    if (scrollToEnd) {
+      this.div.scrollTo(bbox.width, 0);
+    }
   }
 
   render() {
